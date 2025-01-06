@@ -655,37 +655,49 @@ def handle_trap(area="forest"):
     return f"{trap['icon']} {trap['text']}! You take {trap['damage']} damage"
 
 def handle_combat():
-    """Handle combat encounters"""
+    """Handle combat encounters with multiple action choices"""
     warrior = st.session_state.warrior
     enemy = st.session_state.current_enemy
     
     st.subheader(f":material/swords: Combat with {enemy.name}")
     
-    # Create main layout
+    # Main layout
     info_col, image_col = st.columns([3, 2])
     
     with info_col:
-        st.markdown(f"{enemy.name} emerges from the shadows!")
+        st.markdown(f"{enemy.name} stands before you!")
         st.metric("Enemy Health", enemy.health)
         st.metric("Enemy Strength", enemy.strength)
+        st.metric("Enemy Armor", getattr(enemy, 'armour', 0))
         
-        # Instead of nested columns, use horizontal spacing
-        st.write("")  # Add some spacing
-        attack_button = st.button("Attack!", icon=":material/swords:", use_container_width=True)
-        run_away_button = st.button("Run Away", icon=":material/directions_run:", use_container_width=True)
+        # Calculate action costs
+        heavy_attack_cost = max(1, warrior.health // 10)
+        power_cost = max(1, warrior.health // 5)
+        
+        # Action buttons
+        st.write("Choose your action:")
+        
+        # Basic actions
+        st.button("⚔️ Attack", on_click=process_combat_round, args=("normal_attack",), use_container_width=True)
+        st.button("🛡️ Defend", on_click=process_combat_round, args=("defend",), use_container_width=True)
+        st.button(f"🔥 Heavy Attack (-{heavy_attack_cost} HP)", on_click=process_combat_round, args=("heavy_attack",), use_container_width=True)
+        
+        # Class-specific ability
+        if warrior.build_type == "Barbarian":
+            st.button(f"💢 Berserk (-{power_cost} HP)", on_click=process_combat_round, args=("berserk",), use_container_width=True)
+        elif warrior.build_type == "Rogue":
+            st.button("🗡️ Backstab", on_click=process_combat_round, args=("backstab",), use_container_width=True)
+        elif warrior.build_type == "Knight":
+            st.button("🛡️ Shield Bash", on_click=process_combat_round, args=("shield_bash",), use_container_width=True)
+        
+        # Run away button
+        st.button("🏃 Run Away", on_click=lambda: setattr(st.session_state, 'current_enemy', None), use_container_width=True)
     
     with image_col:
-        # Load and display enemy image
         try:
             st.image(f"images/monsters/{enemy.image}", use_container_width=True)
         except:
             st.image("images/monsters/placeholder.png", use_container_width=True)
-
-    if attack_button:
-        process_combat_round()
-    elif run_away_button:
-        st.session_state.combat_log.append(":material/run: You ran away from the battle!")
-        st.session_state.current_enemy = None
 
 def handle_enemy_defeat():
     """Enhanced enemy defeat with luck-based bonuses"""
@@ -736,66 +748,139 @@ def handle_warrior_defeat():
     st.session_state.current_enemy = None
 
 
-def process_combat_round():
-    """Process a single round of combat"""
+def process_combat_round(action_type):
+    """Process combat round with different action types"""
     warrior = st.session_state.warrior
     enemy = st.session_state.current_enemy
     
-    # Player attack phase
-    if random.random() < calculate_critical_chance(warrior.luck):
-        # Critical hit
-        base_damage, blocked_damage, original_damage = calculate_damage(warrior.strength, enemy.armour if hasattr(enemy, 'armour') else 0)
-        damage = base_damage * 2
-        st.session_state.combat_log.append(f"⚡ Critical Hit! You strike {enemy.name} for {original_damage} damage!")
-        if blocked_damage > 0:
-            st.session_state.combat_log.append(f"🛡️ Enemy armor blocks {blocked_damage} damage!")
-        st.session_state.combat_log.append(f"💥 Final damage dealt: {damage} (Critical!)")
-    else:
-        # Normal attack
-        damage, blocked_damage, original_damage = calculate_damage(warrior.strength, enemy.armour if hasattr(enemy, 'armour') else 0)
-        st.session_state.combat_log.append(f"🗡️ You strike {enemy.name} for {original_damage} damage")
-        if blocked_damage > 0:
-            st.session_state.combat_log.append(f"🛡️ Enemy armor blocks {blocked_damage} damage!")
-        st.session_state.combat_log.append(f"💥 Final damage dealt: {damage}")
+    # Player action phase
+    if action_type == "normal_attack":
+        handle_normal_attack(warrior, enemy)
+    elif action_type == "heavy_attack":
+        handle_heavy_attack(warrior, enemy)
+    elif action_type == "defend":
+        handle_defend(warrior)
+    elif action_type == "berserk":
+        handle_berserk(warrior, enemy)
+    elif action_type == "backstab":
+        handle_backstab(warrior, enemy)
+    elif action_type == "shield_bash":
+        handle_shield_bash(warrior, enemy)
     
-    enemy.health -= damage
-
     # Check for enemy defeat
     if enemy.health <= 0:
         handle_enemy_defeat()
         return
-
-    # Enemy attack phase
-    if dodge_attack(warrior.luck, enemy.strength):
-        st.session_state.combat_log.append(f"💨 {warrior.name} gracefully dodges {enemy.name}'s attack!")
-    else:
-        enemy_damage, blocked_damage, original_damage = calculate_damage(enemy.strength, warrior.armour)
-        warrior.health -= enemy_damage
-        st.session_state.combat_log.append(f"⚔️ {enemy.name} strikes you for {original_damage} damage")
-        if blocked_damage > 0:
-            st.session_state.combat_log.append(f"🛡️ Your armor blocks {blocked_damage} damage!")
-        st.session_state.combat_log.append(f"💥 Final damage taken: {enemy_damage}")
-        
-        # Counter-attack chance based on luck
-        if random.random() < (warrior.luck / 200):  # 0.5% chance per luck point
-            counter_damage, counter_blocked, counter_original = calculate_damage(
-                warrior.strength, 
-                enemy.armour if hasattr(enemy, 'armour') else 0
-            )
-            counter_damage = max(1, int(counter_damage * 0.5))  # Counter attacks do 50% damage
-            enemy.health -= counter_damage
-            st.session_state.combat_log.append(f"↪️ You counter-attack for {counter_damage} damage!")
-            
-            if enemy.health <= 0:
-                handle_enemy_defeat()
-                return
-
+    
+    # Enemy action phase
+    if not is_stunned(enemy):
+        handle_enemy_attack(warrior, enemy)
+    
     # Check for warrior defeat
     if warrior.health <= 0:
         handle_warrior_defeat()
         return
-
-    # Status effects and buff updates
+    
+    # Update buffs and effects
     expired_buffs = warrior.update_buff_durations()
     for buff in expired_buffs:
         st.session_state.combat_log.append(f"{buff.icon} {buff.name} has worn off!")
+
+def handle_normal_attack(warrior, enemy):
+    """Regular attack with critical chance"""
+    if random.random() < calculate_critical_chance(warrior.luck):
+        damage, blocked, original = calculate_damage(warrior.strength, enemy.armour if hasattr(enemy, 'armour') else 0)
+        damage *= 2
+        st.session_state.combat_log.append(f"⚡ Critical Hit! You strike for {original} damage!")
+        if blocked > 0:
+            st.session_state.combat_log.append(f"🛡️ Enemy blocks {blocked} damage!")
+        st.session_state.combat_log.append(f"💥 Final damage: {damage} (Critical!)")
+    else:
+        damage, blocked, original = calculate_damage(warrior.strength, enemy.armour if hasattr(enemy, 'armour') else 0)
+        st.session_state.combat_log.append(f"🗡️ You attack for {original} damage")
+        if blocked > 0:
+            st.session_state.combat_log.append(f"🛡️ Enemy blocks {blocked} damage!")
+        st.session_state.combat_log.append(f"💥 Final damage: {damage}")
+    enemy.health -= damage
+
+def handle_heavy_attack(warrior, enemy):
+    """Powerful attack that costs health but deals more damage"""
+    health_cost = max(1, warrior.health // 10)
+    warrior.health -= health_cost
+    
+    damage, blocked, original = calculate_damage(warrior.strength * 1.5, enemy.armour if hasattr(enemy, 'armour') else 0)
+    st.session_state.combat_log.append(f"💪 You unleash a heavy attack for {original} damage!")
+    if blocked > 0:
+        st.session_state.combat_log.append(f"🛡️ Enemy blocks {blocked} damage!")
+    st.session_state.combat_log.append(f"💥 Final damage: {damage}")
+    enemy.health -= damage
+
+def handle_defend(warrior):
+    """Defensive stance that reduces incoming damage"""
+    buff = Buff(
+        name="Defensive Stance",
+        stat="armour",
+        value=warrior.armour,  # Double armor
+        duration=1,
+        icon="🛡️"
+    )
+    warrior.apply_buff(buff)
+    st.session_state.combat_log.append("🛡️ You take a defensive stance!")
+
+def handle_berserk(warrior, enemy):
+    """Barbarian ability: Trade health for massive damage"""
+    health_cost = max(1, warrior.health // 5)
+    warrior.health -= health_cost
+    
+    damage, blocked, original = calculate_damage(warrior.strength * 2, enemy.armour if hasattr(enemy, 'armour') else 0)
+    st.session_state.combat_log.append(f"💢 BERSERK! You unleash a devastating attack for {original} damage!")
+    if blocked > 0:
+        st.session_state.combat_log.append(f"🛡️ Enemy blocks {blocked} damage!")
+    st.session_state.combat_log.append(f"💥 Final damage: {damage}")
+    enemy.health -= damage
+
+def handle_backstab(warrior, enemy):
+    """Rogue ability: High damage with high luck chance"""
+    if random.random() < (warrior.luck / 100):
+        damage = warrior.strength * 3  # Bypass armor
+        st.session_state.combat_log.append(f"🗡️ BACKSTAB! You strike a vital point for {damage} damage!")
+        enemy.health -= damage
+    else:
+        damage, blocked, original = calculate_damage(warrior.strength * 0.5, enemy.armour if hasattr(enemy, 'armour') else 0)
+        st.session_state.combat_log.append("❌ Backstab failed! You deal reduced damage.")
+        enemy.health -= damage
+
+def handle_shield_bash(warrior, enemy):
+    """Knight ability: Stun enemy and deal damage based on armor"""
+    damage = warrior.armour
+    enemy.health -= damage
+    st.session_state.combat_log.append(f"🛡️ SHIELD BASH! You slam your shield into the enemy for {damage} damage!")
+    
+    # Apply stun
+    if not hasattr(enemy, 'effects'):
+        enemy.effects = {}
+    enemy.effects['stunned'] = 1
+    st.session_state.combat_log.append("💫 Enemy is stunned for 1 turn!")
+
+def is_stunned(enemy):
+    """Check if enemy is stunned"""
+    return hasattr(enemy, 'effects') and enemy.effects.get('stunned', 0) > 0
+
+def handle_enemy_attack(warrior, enemy):
+    """Process enemy attack phase"""
+    if dodge_attack(warrior.luck, enemy.strength):
+        st.session_state.combat_log.append(f"💨 {warrior.name} dodges the attack!")
+        return
+    
+    damage, blocked, original = calculate_damage(enemy.strength, warrior.armour)
+    warrior.health -= damage
+    st.session_state.combat_log.append(f"⚔️ {enemy.name} attacks for {original} damage")
+    if blocked > 0:
+        st.session_state.combat_log.append(f"🛡️ You block {blocked} damage!")
+    st.session_state.combat_log.append(f"💥 Final damage taken: {damage}")
+    
+    # Counter-attack chance
+    if random.random() < (warrior.luck / 200):
+        counter_damage = max(1, int(calculate_damage(warrior.strength, enemy.armour)[0] * 0.5))
+        enemy.health -= counter_damage
+        st.session_state.combat_log.append(f"↪️ Counter-attack! You deal {counter_damage} damage!")

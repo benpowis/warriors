@@ -1,5 +1,6 @@
 import streamlit as st
 from utils import Warrior, init_session, warrior_profile
+from save_system import add_save_load_ui
 
 def create_warrior(name, build_type):
     st.session_state.warrior = Warrior(name, build_type)
@@ -13,6 +14,9 @@ if st.session_state.warrior is None:
         name = st.text_input("Enter your warrior's name")
         build_type = st.selectbox("Choose your warrior class", ["Barbarian", "Rogue", "Knight"])
         submitted = st.form_submit_button("Create Warrior")
+
+        with st.sidebar:
+            add_save_load_ui()
         
         if submitted and name:
             create_warrior(name, build_type)

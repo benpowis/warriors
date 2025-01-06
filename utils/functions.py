@@ -1,5 +1,6 @@
 import streamlit as st
 from utils import Enemy, ItemType
+from save_system import add_save_load_ui
 
 def celebrate():
     if st.button("Party time!"):
@@ -104,3 +105,4 @@ def warrior_profile():
                 f"{buff.icon} {buff.name}: +{buff.value} {buff.stat} "
                 f"({buff.duration} rounds remaining)"
             )
+    add_save_load_ui()
