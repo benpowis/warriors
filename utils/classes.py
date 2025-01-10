@@ -76,14 +76,14 @@ class Enemy:
             {"name": "Dragon", "health": 100, "strength": 20, "armour": 25, "xp": 80, "gold": 100, "image": "dragon.png", "weight": 2}
         ],
         "mountain_easy": [
-            {"name": "Frost Imp", "health": 65, "strength": 10, "armour": 2, "xp": 40, "gold": 45, "image": "placeholder.png", "weight": 25},
-            {"name": "Snow Wolf", "health": 75, "strength": 14, "armour": 4, "xp": 45, "gold": 35, "image": "placeholder.png", "weight": 20},
-            {"name": "Ice Goblin", "health": 85, "strength": 11, "armour": 6, "xp": 48, "gold": 42, "image": "placeholder.png", "weight": 15},
-            {"name": "Mountain Bandit", "health": 88, "strength": 14, "armour": 7, "xp": 54, "gold": 48, "image": "placeholder.png", "weight": 15},
-            {"name": "Crystal Spider", "health": 70, "strength": 13, "armour": 8, "xp": 55, "gold": 38, "image": "placeholder.png", "weight": 10},
-            {"name": "Mountain Goat", "health": 80, "strength": 12, "armour": 5, "xp": 50, "gold": 30, "image": "placeholder.png", "weight": 8},
-            {"name": "Cave Dweller", "health": 95, "strength": 13, "armour": 10, "xp": 52, "gold": 36, "image": "placeholder.png", "weight": 5},
-            {"name": "Rock Elemental", "health": 90, "strength": 15, "armour": 15, "xp": 60, "gold": 40, "image": "placeholder.png", "weight": 2}
+            {"name": "Frost Imp", "health": 65, "strength": 10, "armour": 2, "xp": 40, "gold": 45, "image": "mountains/imp.png", "weight": 25},
+            {"name": "Snow Wolf", "health": 75, "strength": 14, "armour": 4, "xp": 45, "gold": 35, "image": "mountains/wolf.png", "weight": 20},
+            {"name": "Ice Goblin", "health": 85, "strength": 11, "armour": 6, "xp": 48, "gold": 42, "image": "mountains/goblin.png", "weight": 15},
+            {"name": "Mountain Bandit", "health": 88, "strength": 14, "armour": 7, "xp": 54, "gold": 48, "image": "mountains/bandit.png", "weight": 15},
+            {"name": "Crystal Spider", "health": 70, "strength": 13, "armour": 8, "xp": 55, "gold": 38, "image": "mountains/spider.png", "weight": 10},
+            {"name": "Mountain Goat", "health": 80, "strength": 12, "armour": 5, "xp": 50, "gold": 30, "image": "mountains/goat.png", "weight": 8},
+            {"name": "Cave Dweller", "health": 95, "strength": 13, "armour": 10, "xp": 52, "gold": 36, "image": "mountains/dweller.png", "weight": 5},
+            {"name": "Rock Elemental", "health": 90, "strength": 15, "armour": 15, "xp": 60, "gold": 40, "image": "mountains/rock_elemental.png", "weight": 2}
         ],
         "mountain_medium": [
             {"name": "Storm Harpy", "health": 95, "strength": 24, "armour": 8, "xp": 78, "gold": 75, "image": "placeholder.png", "weight": 20},
@@ -131,6 +131,7 @@ class Enemy:
         self.name = selected_enemy["name"]
         self.health = selected_enemy["health"]
         self.strength = selected_enemy["strength"]
+        self.armour = selected_enemy["armour"]
         self.xp = selected_enemy["xp"]
         self.gold = selected_enemy["gold"]
         self.image = selected_enemy["image"]

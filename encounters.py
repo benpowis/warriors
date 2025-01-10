@@ -672,7 +672,7 @@ def handle_combat():
         st.markdown(f"{enemy.name} stands before you!")
         st.metric("Enemy Health", enemy.health)
         st.metric("Enemy Strength", enemy.strength)
-        st.metric("Enemy Armor", getattr(enemy, 'armour', 0))
+        st.metric("Enemy Armor", enemy.armour)
         
         # Calculate action costs
         heavy_attack_cost = max(1, warrior.health // 10)
