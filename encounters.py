@@ -501,6 +501,10 @@ def handle_chest(difficulty="easy", area="forest"):
                     item_type=ItemType.CONSUMABLE
                 )
                 st.session_state.warrior.inventory.append(item)
+                # Update quest progress here
+                for quest in st.session_state.quests.values():
+                    quest.update_progress("item_collected", {"item_name": item.name})
+
                 return f"{item.icon} Found a {item.name}!"
                 
             elif loot["item"] == "weapon":
@@ -703,6 +707,10 @@ def handle_enemy_defeat():
     """Enhanced enemy defeat with luck-based bonuses"""
     warrior = st.session_state.warrior
     enemy = st.session_state.current_enemy
+    
+    # Update quest progress for kill quests
+    for quest in st.session_state.quests.values():
+        quest.update_progress("enemy_killed", {"enemy_name": enemy.name})
     
     st.session_state.combat_log.append(f"🏆 You defeated {enemy.name}!")
     

@@ -1,6 +1,7 @@
 import streamlit as st
 from utils import Enemy, ItemType
 from save_system import add_save_load_ui
+from quest_config import QuestStatus, QuestType
 
 def celebrate():
     if st.button("Party time!"):
@@ -13,8 +14,12 @@ def initialize_session():
         st.session_state.current_enemy = None
     if 'combat_log' not in st.session_state:
         st.session_state.combat_log = []
+    if 'quests' not in st.session_state:
+        st.session_state.quests = {}
 
 def handle_area_selection(area):
+    # Split area into name and difficulty
+    area_name, difficulty = area.split('_')
     st.session_state.current_enemy = Enemy(area)
     st.session_state.combat_log = []
 

@@ -314,7 +314,8 @@ class Warrior:
     
     def get_xp_progress(self):
         """Return progress as a fraction between 0 and 1"""
-        return self.experience / self.calculate_xp_needed()
+        progress = self.experience / self.calculate_xp_needed()
+        return min(1.0, max(0.0, progress))  # Clamp between 0 and 1
     
     def apply_buff(self, buff):
         """Apply a temporary buff to the warrior"""

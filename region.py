@@ -1,6 +1,7 @@
 import streamlit as st
-from utils import init_session, warrior_profile, area
+from utils import init_session, warrior_profile, area, Enemy
 from encounters import generate_encounter, handle_chest, handle_blessing, handle_trap, handle_combat
+from quest_config import QuestStatus, QuestType
 import random
 
 class Region:
@@ -26,14 +27,33 @@ class Region:
         return True
 
     def handle_area_selection(self, area_name, difficulty):
-        encounter_type = generate_encounter()
         warrior = st.session_state.warrior
+        area_id = f"{area_name}_{difficulty}"
         
-        # Use area message from config
+        # Record area visit first, before any encounters
+        if 'quests' in st.session_state:
+            for quest in st.session_state.quests.values():
+                if quest.status == QuestStatus.ACTIVE and quest.quest_type == QuestType.EXPLORE:
+                    if area_id in quest.requirements["areas"]:
+                        if not quest.progress.get(area_id, False):  # Only update if not already visited
+                            quest.progress[area_id] = True
+                            # Find the specific area name from the config
+                            specific_area_name = next(
+                                (area for area, diff in self.config['areas'] if diff == difficulty), 
+                                f"{difficulty} {area_name}"
+                            )
+                            st.toast(f"Exploration Progress: Discovered {specific_area_name}!")
+                            # Check if quest is now complete
+                            if quest.is_complete():
+                                quest.status = QuestStatus.COMPLETED
+                                st.toast(f"🎯 Quest Complete: {quest.title}!")
+        
+        # Generate and handle encounter
+        encounter_type = generate_encounter()
         st.session_state.combat_log.append(self.config['area_messages'][difficulty])
         
         if encounter_type == "enemy":
-            area(f"{area_name}_{difficulty}")
+            st.session_state.current_enemy = Enemy(f"{area_name}_{difficulty}")
             return True
         elif encounter_type == "chest":
             message = handle_chest(difficulty, area_name)

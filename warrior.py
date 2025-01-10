@@ -1,9 +1,17 @@
 import streamlit as st
 from utils import Warrior, init_session, warrior_profile
 from save_system import add_save_load_ui
+from quest_config import FOREST_QUESTS, MOUNTAIN_QUESTS, Quest, QuestType
+import copy
 
 def create_warrior(name, build_type):
     st.session_state.warrior = Warrior(name, build_type)
+    # Reset and initialize quests with deep copies
+    st.session_state.quests = {}
+    # Add all available quests as deep copies
+    all_quests = FOREST_QUESTS + MOUNTAIN_QUESTS
+    for quest in all_quests:
+        st.session_state.quests[quest.id] = copy.deepcopy(quest)
 
 init_session()
 

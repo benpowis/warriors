@@ -132,7 +132,7 @@ def display_active_quests(warrior):
                 st.rerun()
 
 def display_completed_quests():
-    """Display completed quests"""
+    """Display completed quests with reward claiming"""
     completed_quests = [
         quest for quest in st.session_state.quests.values()
         if quest.status == QuestStatus.COMPLETED
@@ -147,8 +147,8 @@ def display_completed_quests():
             st.subheader(f"✅ {quest.title}")
             st.write(quest.description)
             
-            # Show rewards received
-            st.write("**Rewards received:**")
+            # Show available rewards
+            st.write("**Available Rewards:**")
             if "gold" in quest.rewards:
                 st.write(f"- {quest.rewards['gold']} gold")
             if "xp" in quest.rewards:
@@ -156,6 +156,26 @@ def display_completed_quests():
             if "items" in quest.rewards:
                 for item in quest.rewards["items"]:
                     st.write(f"- {item}")
+            
+            # Claim rewards button
+            if st.button("Claim Rewards", key=f"claim_{quest.id}"):
+                result = quest.claim_rewards(st.session_state.warrior)
+                st.toast(result)
+                st.rerun()
+
+def display_rewarded_quests():
+    """Display previously rewarded quests"""
+    rewarded_quests = [
+        quest for quest in st.session_state.quests.values()
+        if quest.status == QuestStatus.REWARDED
+    ]
+    
+    if rewarded_quests:
+        st.write("### 📜 Quest History")
+        for quest in rewarded_quests:
+            with st.expander(f"✨ {quest.title}"):
+                st.write(quest.description)
+                st.write("*Rewards claimed*")
 
 # Initialize quests when page loads
 initialize_quests()
