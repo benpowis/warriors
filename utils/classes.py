@@ -86,29 +86,29 @@ class Enemy:
             {"name": "Rock Elemental", "health": 90, "strength": 15, "armour": 15, "xp": 60, "gold": 40, "image": "mountains/rock_elemental.png", "weight": 2}
         ],
         "mountain_medium": [
-            {"name": "Storm Harpy", "health": 95, "strength": 24, "armour": 8, "xp": 78, "gold": 75, "image": "placeholder.png", "weight": 20},
-            {"name": "Ice Witch", "health": 90, "strength": 26, "armour": 10, "xp": 88, "gold": 85, "image": "placeholder.png", "weight": 15},
-            {"name": "Ice Troll", "health": 100, "strength": 20, "armour": 15, "xp": 75, "gold": 70, "image": "placeholder.png", "weight": 15},
-            {"name": "Avalanche Spirit", "health": 110, "strength": 23, "armour": 14, "xp": 84, "gold": 78, "image": "placeholder.png", "weight": 12},
-            {"name": "Frost Giant", "health": 120, "strength": 18, "armour": 18, "xp": 80, "gold": 60, "image": "placeholder.png", "weight": 10},
-            {"name": "Mountain Ogre", "health": 150, "strength": 21, "armour": 16, "xp": 76, "gold": 72, "image": "placeholder.png", "weight": 10},
-            {"name": "Yeti", "health": 130, "strength": 22, "armour": 12, "xp": 85, "gold": 65, "image": "placeholder.png", "weight": 8},
-            {"name": "Frost Wyrm", "health": 140, "strength": 19, "armour": 20, "xp": 82, "gold": 68, "image": "placeholder.png", "weight": 5},
-            {"name": "Ice Drake", "health": 125, "strength": 25, "armour": 22, "xp": 90, "gold": 80, "image": "placeholder.png", "weight": 3},
-            {"name": "Crystal Golem", "health": 160, "strength": 20, "armour": 25, "xp": 86, "gold": 66, "image": "placeholder.png", "weight": 2}
+            {"name": "Storm Harpy", "health": 95, "strength": 24, "armour": 8, "xp": 78, "gold": 75, "image": "harpy.png", "weight": 20},
+            {"name": "Ice Witch", "health": 90, "strength": 26, "armour": 10, "xp": 88, "gold": 85, "image": "witch.png", "weight": 15},
+            {"name": "Ice Troll", "health": 100, "strength": 20, "armour": 15, "xp": 75, "gold": 70, "image": "troll.png", "weight": 15},
+            {"name": "Avalanche Spirit", "health": 110, "strength": 23, "armour": 14, "xp": 84, "gold": 78, "image": "spirit.png", "weight": 12},
+            {"name": "Frost Giant", "health": 120, "strength": 18, "armour": 18, "xp": 80, "gold": 60, "image": "giant.png", "weight": 10},
+            {"name": "Mountain Ogre", "health": 150, "strength": 21, "armour": 16, "xp": 76, "gold": 72, "image": "ogre.png", "weight": 10},
+            {"name": "Yeti", "health": 130, "strength": 22, "armour": 12, "xp": 85, "gold": 65, "image": "yeti.png", "weight": 8},
+            {"name": "Frost Wyrm", "health": 140, "strength": 19, "armour": 20, "xp": 82, "gold": 68, "image": "wyrm.png", "weight": 5},
+            {"name": "Ice Drake", "health": 125, "strength": 25, "armour": 22, "xp": 90, "gold": 80, "image": "drake.png", "weight": 3},
+            {"name": "Crystal Golem", "health": 160, "strength": 20, "armour": 25, "xp": 86, "gold": 66, "image": "golem.png", "weight": 2}
         ],
         "mountain_hard": [
-            {"name": "Glacier Queen", "health": 170, "strength": 30, "armour": 25, "xp": 140, "gold": 180, "image": "placeholder.png", "weight": 20},
-            {"name": "Eternal Ice Elemental", "health": 185, "strength": 31, "armour": 28, "xp": 138, "gold": 170, "image": "placeholder.png", "weight": 15},
-            {"name": "Blizzard Demon", "health": 195, "strength": 32, "armour": 26, "xp": 150, "gold": 200, "image": "placeholder.png", "weight": 15},
-            {"name": "Elder Frost Wyrm", "health": 190, "strength": 29, "armour": 38, "xp": 135, "gold": 175, "image": "placeholder.png", "weight": 12},
-            {"name": "Mountain Titan", "health": 180, "strength": 28, "armour": 30, "xp": 130, "gold": 160, "image": "placeholder.png", "weight": 10},
-            {"name": "Storm Giant King", "health": 220, "strength": 26, "armour": 32, "xp": 125, "gold": 165, "image": "placeholder.png", "weight": 8},
-            {"name": "Mountain Overlord", "health": 210, "strength": 27, "armour": 34, "xp": 145, "gold": 190, "image": "placeholder.png", "weight": 8},
-            {"name": "Ancient Frost Giant", "health": 240, "strength": 28, "armour": 36, "xp": 142, "gold": 185, "image": "placeholder.png", "weight": 5},
-            {"name": "Crystal Behemoth", "health": 230, "strength": 24, "armour": 40, "xp": 128, "gold": 155, "image": "placeholder.png", "weight": 4},
-            {"name": "Ancient Dragon", "health": 200, "strength": 25, "armour": 35, "xp": 120, "gold": 150, "image": "placeholder.png", "weight": 2},
-            {"name": "Mountain Dragon Lord", "health": 250, "strength": 35, "armour": 45, "xp": 160, "gold": 250, "image": "placeholder.png", "weight": 1}  # Ultimate boss, very rare
+            {"name": "Glacier Queen", "health": 170, "strength": 30, "armour": 25, "xp": 140, "gold": 180, "image": "queen.png", "weight": 20},
+            {"name": "Eternal Ice Elemental", "health": 185, "strength": 31, "armour": 28, "xp": 138, "gold": 170, "image": "ice_elemental.png", "weight": 15},
+            {"name": "Blizzard Demon", "health": 195, "strength": 32, "armour": 26, "xp": 150, "gold": 200, "image": "demon.png", "weight": 15},
+            {"name": "Elder Frost Wyrm", "health": 190, "strength": 29, "armour": 38, "xp": 135, "gold": 175, "image": "elder_wyrm.png", "weight": 12},
+            {"name": "Mountain Titan", "health": 180, "strength": 28, "armour": 30, "xp": 130, "gold": 160, "image": "titan.png", "weight": 10},
+            {"name": "Storm Giant King", "health": 220, "strength": 26, "armour": 32, "xp": 125, "gold": 165, "image": "giant_king.png", "weight": 8},
+            {"name": "Mountain Overlord", "health": 210, "strength": 27, "armour": 34, "xp": 145, "gold": 190, "image": "overlord.png", "weight": 8},
+            {"name": "Ancient Frost Giant", "health": 240, "strength": 28, "armour": 36, "xp": 142, "gold": 185, "image": "ancient_giant.png", "weight": 5},
+            {"name": "Crystal Behemoth", "health": 230, "strength": 24, "armour": 40, "xp": 128, "gold": 155, "image": "behemoth.png", "weight": 4},
+            {"name": "Ancient Dragon", "health": 200, "strength": 25, "armour": 35, "xp": 120, "gold": 150, "image": "ancient_dragon.png", "weight": 2},
+            {"name": "Mountain Dragon Lord", "health": 250, "strength": 35, "armour": 45, "xp": 160, "gold": 250, "image": "dragon_lord.png", "weight": 1}  # Ultimate boss, very rare
         ]
         }
         area_enemies = enemies[area]

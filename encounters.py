@@ -699,7 +699,9 @@ def handle_combat():
     
     with image_col:
         try:
-            st.image(f"images/monsters/{enemy.image}", use_container_width=True)
+            # Use os.path.join for proper path construction
+            image_path = f"images/monsters/{enemy.image}"
+            st.image(image_path, use_container_width=True)
         except:
             st.image("images/monsters/placeholder.png", use_container_width=True)
 
